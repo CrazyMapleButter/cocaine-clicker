@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cocaine Clicker Game</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            background: url('assets/background.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #ecf0f1;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #ecf0f1;
+            font-size: 3em;
+            margin: 20px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
+
+        h2 {
+            color: #1abc9c;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .button {
+            padding: 12px 25px;
+            margin: 10px;
+            font-size: 18px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.7);
+        }
+
+        /* Cocaine Image Styling */
+        #cocaineImage {
+            width: 250px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        #cocaineImage:hover {
+            transform: scale(1.2);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        #stats {
+            font-size: 24px;
+            background-color: rgba(44, 62, 80, 0.9);
+            padding: 20px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+        }
+
+        .upgrade-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .black-market-title {
+            color: #e74c3c;
+            font-size: 28px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+            margin-bottom: 20px;
+        }
+
+        /* Modal (Credits) Styling */
+        #creditsModal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #2c3e50;
+            padding: 30px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 500px;
+            color: #ecf0f1;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.9);
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            color: #f39c12;
+        }
+
+        .modal-content p {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .close-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        .close-button:hover {
+            background-color: #c0392b;
+        }
+
+        /* Lab Name Visibility */
+        #labName {
+            color: #ffcc00;
+            font-weight: bold;
+            font-size: 24px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Lab Name Label Styling */
+        #labLabel {
+            color: #ffcc00;
+            font-weight: bold;
+            font-size: 24px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Cocaine Clicker</h1>
+
+    <!-- Cocaine image -->
+    <img id="cocaineImage" src="assets/cocaine.png" alt="Cocaine" onclick="collectCocaine()"> 
+
+    <!-- Cocaine count, money, and sell cocaine button -->
+    <div id="stats">
+        <p>Cocaine Count: <span id="cocaineCount">0</span></p>
+        <p>Money: $<span id="money">0</span></p>
+        <button id="sellButton" class="button" onclick="sellCocaine()">Sell Cocaine</button>
+    </div>
+
+    <!-- Black Market Upgrades -->
+    <h2 class="black-market-title">Black Market</h2>
+    <div class="upgrade-list">
+        <button class="button" onclick="buyUpgrade('betterCocaine')">Better Cocaine - Price: $<span id="betterCocainePrice">100</span></button>
+        <button class="button" onclick="buyUpgrade('lab')">Cocaine Lab - Price: $<span id="labPrice">500</span></button>
+        <button class="button" onclick="buyUpgrade('fasterProduction')">Faster Production - Price: $<span id="fasterProductionPrice">1000</span></button>
+        <button class="button" onclick="buyUpgrade('dealer')">Cocaine Dealer - Price: $<span id="dealerPrice">2000</span></button>
+        <button class="button" onclick="buyUpgrade('valueIncrease')">Value Increase - Price: $<span id="valueIncreasePrice">300</span></button>
+        <button class="button" onclick="buyUpgrade('betterConversion')">Better Conversion - Price: $<span id="betterConversionPrice">400</span></button>
+        <button class="button" onclick="buyUpgrade('increasedLabEfficiency')">increased Lab Efficiency - Price: $<span id="increasedLabEfficiencyPrice">750</span></button>
+        <button class="button" onclick="buyUpgrade('marketingCampaign')">Marketing Campaign - Price: $<span id="marketingCampaignPrice">600</span></button>
+        <button class="button" onclick="buyUpgrade('bulkDealer')">Bulk Dealer - Price: $<span id="bulkDealerPrice">3000</span></button>
+        <button class="button" onclick="buyUpgrade('qualityControl')">quality Control - Price: $<span id="qualityControlPrice">2000</span></button>
+        <button class="button" onclick="buyUpgrade('globalExpansion')">Global Expansion - Price: $<span id="globalExpansionPrice">5000</span></button>
+
+    </div>
+
+    <!-- Lab Name Section -->
+    <div id="labNameSection">
+        <h2>Rename Your Cocaine Lab</h2>
+        <input type="text" id="labNameInput" placeholder="Enter new lab name">
+        <button class="button" onclick="changeLabName()">Change Name</button>
+        <p id="labLabel">Lab Name: </p> <span id="labName">Cocaine Lab</span>
+    </div>
+
+    <!-- Credits Button -->
+    <button class="button" onclick="openCredits()">Credits</button>
+
+    <!-- Reset Progress Button -->
+    <button id="resetButton" class="button" onclick="resetProgress()">Reset Progress</button>
+
+    <script src="scripts/game.js" defer></script>
+
+
+    <!-- Credits Modal -->
+    <div id="creditsModal">
+        <div class="modal-content">
+            <h2>Credits</h2>
+            <p>Thanks to CrazyMapleButter for all the coding and UI design!</p>
+            <p>Thanks to MrPizza44 for the game idea!</p>
+            <button class="close-button" onclick="closeCredits()">Close</button>
+        </div>
+    </div>
+</body>
+</html>
